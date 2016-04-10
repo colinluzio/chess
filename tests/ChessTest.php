@@ -2,8 +2,7 @@
 
 namespace Test;
 
-require_once('../Game/Chess.php');
-require_once('../DB/database.php');
+require '../vendor/autoload.php';
 
 use \Game\Chess;
 
@@ -92,10 +91,12 @@ class ChessTest extends \PHPUnit_Framework_TestCase
     // }
 
     protected static function getMethod($name) {
-      $class = new \ReflectionClass('\Game\Chess');
-      $method = $class->getMethod($name);
-      $method->setAccessible(true);
-      return $method;
+
+        $class = new \ReflectionClass('\Game\Chess');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+
+        return $method;
     }
 }
 
