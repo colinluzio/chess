@@ -2,16 +2,9 @@
 
 spl_autoload_register();
 
-if(isset($_GET['game'])){
-    $game = $_GET['game'];
-} else {
-    $game = 0;
-}
-if(isset($_GET['move'])){
-    $move = $_GET['move'];
-} else {
-    $move = '';
-}
+$game = (isset($_GET['game']) ? $_GET['game'] : 0);
+$move = (isset($_GET['move']) ? $_GET['move'] : 0);
+
 
 $chess = new Game\Chess($game,$move);
 ?>
