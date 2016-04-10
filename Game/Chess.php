@@ -26,7 +26,7 @@ class Chess
                                  ['','','','','','','',''],
                                  ['','','','','','','',''],
                                  ['BP1','BP2','BP3','BP4','BP5','BP6','BP7','BP8'],
-                                 ['BR1','BN1','BB1','BQ','BK','BB2','BN','BR2']
+                                 ['BR1','BN1','BB1','BQ','BK','BB2','BN2','BR2']
                                  ];
 
     public function __construct($game, $move)
@@ -65,7 +65,7 @@ class Chess
             $this->moveBishop($move,$color);
         } elseif(strpos($move,'R') > -1){
             $this->moveRook($move,$color);
-        } elseif (strpos($move,'Q')) {
+        } elseif (strpos($move,'Q') > -1) {
             $this->moveQueen($move,$color);
         } elseif(strpos($move,'K')){
             $this->moveKing($move,$color);
@@ -205,8 +205,64 @@ class Chess
             }
         }
         $this->currentPosition[$yValue][$xValue] = $newPiece;
-
     }
+
+    private function moveQueen($move, $color)
+    {
+        $value  = strtoupper($move[1]);
+        $xValue = $this->$value;
+        $yValue = $move[2]-1;
+        $piece = ($color == 'white' ? 'WQ' : 'BQ' );
+        $found = false;
+
+        for( $x = 0; $x < self::BOARDHEIGHT; $x++ ){
+
+            if( strpos( $this->currentPosition[$x][$xValue], $piece) > -1){
+                $found = true;
+                $newPiece = $this->currentPosition[$x][$xValue];
+                $this->currentPosition[$x][$xValue] = '';
+
+                break;
+            }
+        }
+
+        if(!$found){
+
+            for( $y = 0; $y < self::BOARDWIDTH; $y++){
+                if(strpos( $this->currentPosition[$yValue][$y], $piece) > -1){
+                    $newPiece = $this->currentPosition[$yValue][$y];
+                    $this->currentPosition[$yValue][$y] = '';
+                    $found = true;
+
+                    break;
+                }
+            }
+        }
+        if(!$found){
+
+            $squareColor = $this->getSquareColor($xValue, $yValue);
+
+            for($x = 0; $x < self::BOARDHEIGHT; $x++ ){
+
+                for($y = 0; $y < self::BOARDWIDTH; $y++){
+
+                    if( strpos( $this->currentPosition[$x][$y], $piece ) > -1 &&
+
+                        $this->getSquareColor($y, $x) == $squareColor ){
+
+                            $newPiece = $this->currentPosition[$x][$y];
+
+                            $this->currentPosition[$x][$y]='';
+                            $found = true;
+                    }
+                }
+            }
+        }
+
+        $this->currentPosition[$yValue][$xValue] = $newPiece;
+        
+    }
+
     private function getSquareColor($xValue, $yValue)
     {
         if($xValue % 2 == 0 && $yValue %2 == 0){
